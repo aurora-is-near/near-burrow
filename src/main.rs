@@ -18,6 +18,15 @@ struct Cli {
 enum Commands {
     /// A command to print all asset markets
     List {},
+    /// A command to compute a register transaction for an account in Burrow
+    Register {
+        /// The account_id of the token to be registered
+        token_id: String,
+        /// The account_id of the signer that will be registered
+        account_id: String,
+        /// Storage fee in yoctoNEAR
+        amount: String,
+    },
     /// A command to compute a deposit transaction
     Deposit {
         /// The account_id of the token to be deposited
@@ -54,6 +63,13 @@ async fn main() -> Result<()> {
     match &cli.command {
         Some(Commands::List {}) => {
             commands::list().await?;
+        }
+        Some(Commands::Register {
+            token_id,
+            account_id,
+            amount,
+        }) => {
+            commands::register(token_id, account_id, amount).await?;
         }
         Some(Commands::Deposit { token_id, amount }) => {
             commands::deposit(token_id, amount).await?;
