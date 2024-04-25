@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 
 pub mod commands;
-pub mod utils;
 
 pub type Result<T> = core::result::Result<T, Box<dyn std::error::Error>>;
 
