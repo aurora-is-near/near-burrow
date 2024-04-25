@@ -1,0 +1,58 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*" # Run when tag matches v*, i.e. v1.0, v20.15.10
+
+env:
+  RELEASE_BIN: near-burrow
+  GITHUB_REF: "${{ github.ref }}"
+  WINDOWS_TARGET: x86_64-pc-windows-msvc
+  MACOS_TARGET: x86_64-apple-darwin
+  LINUX_AMD64_TARGET: x86_64-unknown-linux-gnu
+  LINUX_ARM64_TARGET: aarch64-unknown-linux-gnu
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  release:
+    name: GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query version number
+        id: get_version
+        shell: bash
+        run: |
+          echo "using version tag ${GITHUB_REF:10}"
+          echo "version=${GITHUB_REF:10}" >> $GITHUB_OUTPUT
+
+      - name: Download Linux amd64 tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.LINUX_AMD64_TARGET }}
+
+      - name: Download MacOS tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.MACOS_TARGET }}
+
+      # TODO: add LICENSE
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          generate_release_notes: true
+          files: |
+            ./${{ env.RELEASE_BIN }}-${{ env.LINUX_AMD64_TARGET }}.tar.gz
+            ./${{ env.RELEASE_BIN }}-${{ env.MACOS_TARGET }}.tar.gz
+            README.md
