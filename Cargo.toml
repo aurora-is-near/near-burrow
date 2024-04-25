@@ -3,6 +3,10 @@ name = "near-burrow"
 description = "Near CLI extension for interacting with Burrow"
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/aurora-is-near/near-burrow"
+readme = "README.md"
+keywords = ["cli", "near", "burrow"]
+categories = ["command-line-utilities"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
