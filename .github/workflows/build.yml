@@ -19,6 +19,7 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
             rust: stable
+          # TODO: figure out cross-compilation
           # - target: aarch64-unknown-linux-gnu
           #   os: ubuntu-latest
           #   rust: stable
@@ -81,9 +82,7 @@ jobs:
       #   shell: bash
       #   run: |
       #     cp ./target/${{ matrix.target }}/release/${{ env.RELEASE_BIN }}.exe ./${{ env.RELEASE_DIR }}/${{ env.RELEASE_BIN }}-${{ steps.get_version.outputs.VERSION }}-${{ matrix.target }}/${{ env.RELEASE_BIN }}.exe
-      #     cp ./target/${{ matrix.target }}/release/${{ env.RELEASE_BIN }}.exe wasm-pack-init.exe
       #     mv ${{ env.RELEASE_ADDS }} ./${{ env.RELEASE_DIR }}/${{ env.RELEASE_BIN }}-${{ steps.get_version.outputs.VERSION }}-${{ matrix.target }}
-      #     mv wasm-pack-init.exe ${{ env.RELEASE_DIR }}
 
       - name: Create tarball
         shell: bash
