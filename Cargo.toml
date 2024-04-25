@@ -4,6 +4,7 @@ description = "Near CLI extension for interacting with Burrow"
 version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/aurora-is-near/near-burrow"
+license = "CC0-1.0"
 readme = "README.md"
 keywords = ["cli", "near", "burrow"]
 categories = ["command-line-utilities"]
