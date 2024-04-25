@@ -1,0 +1,17 @@
+[package]
+name = "near-burrow"
+description = "Near CLI extension for interacting with Burrow"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = { version = "~4.5.4", features = ["derive"] }
+reqwest = { version = "~0.12.4", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0" }
+tokio = { version = "1", features = ["full"] }
+near-jsonrpc-client = "0.9.0"
+near-primitives = "0.21.2"
+near-jsonrpc-primitives = "0.21.2"
