@@ -35,7 +35,7 @@ pub async fn deposit(token_id: &String, amount: &String) -> Result<SupplyData> {
     // println!("{resp:#?}");
 
     let data = json!(resp.data);
-    // println!("{data}");
+    // println!("{data:#}");
 
     let proposal = Proposal {
         proposal: ProposalData {
