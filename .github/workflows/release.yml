@@ -54,5 +54,3 @@ jobs:
           files: |
             ./${{ env.RELEASE_BIN }}-${{ env.LINUX_AMD64_TARGET }}.tar.gz
             ./${{ env.RELEASE_BIN }}-${{ env.MACOS_TARGET }}.tar.gz
-            README.md
-            LICENSE
