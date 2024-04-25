@@ -1,13 +1,12 @@
 name: Build
 on:
-  pull_request:
   workflow_dispatch:
   workflow_call:
 
 env:
   RELEASE_BIN: near-burrow
   RELEASE_DIR: artifacts
-  RELEASE_ADDS: README.md # TODO: add LICENSE
+  RELEASE_ADDS: README.md LICENSE
 
 jobs:
   build:

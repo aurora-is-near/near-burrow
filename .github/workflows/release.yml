@@ -43,7 +43,6 @@ jobs:
         with:
           name: ${{ env.MACOS_TARGET }}
 
-      # TODO: add LICENSE
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v2
@@ -56,3 +55,4 @@ jobs:
             ./${{ env.RELEASE_BIN }}-${{ env.LINUX_AMD64_TARGET }}.tar.gz
             ./${{ env.RELEASE_BIN }}-${{ env.MACOS_TARGET }}.tar.gz
             README.md
+            LICENSE
