@@ -24,19 +24,23 @@ jobs:
     strategy:
       matrix:
         include:
-          - target: x86_64-unknown-linux-musl
+          - build: linux
             os: ubuntu-latest
             rust: nightly
-          - target: x86_64-unknown-linux-gnu
-            os: ubuntu-latest
-            rust: stable
+            target: x86_64-unknown-linux-musl
           # TODO: figure out cross-compilation
-          - target: aarch64-unknown-linux-gnu
-            os: ubuntu-latest
-            rust: stable
-          - target: x86_64-apple-darwin
+          # - build: stable-x86
+          #   os: ubuntu-latest
+          #   rust: stable
+          #   target: i686-unknown-linux-gnu
+          # - build: stable-aarch64
+          #   os: ubuntu-latest
+          #   rust: stable
+          #   target: aarch64-unknown-linux-gnu
+          - build: macos
             os: macos-latest
             rust: stable
+            target: x86_64-apple-darwin
           # - target: x86_64-pc-windows-msvc
           #   os: windows-latest
           #   rust: stable
