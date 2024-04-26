@@ -11,6 +11,8 @@ env:
   MACOS_TARGET: x86_64-apple-darwin
   LINUX_AMD64_TARGET: x86_64-unknown-linux-gnu
   LINUX_ARM64_TARGET: aarch64-unknown-linux-gnu
+  LINUX_X86_TARGET: i686-unknown-linux-gnu
+  LINUX_NIGHTLY_TARGET: x86_64-unknown-linux-musl
 
 permissions:
   contents: write
@@ -38,6 +40,21 @@ jobs:
         with:
           name: ${{ env.LINUX_AMD64_TARGET }}
 
+      - name: Download Linux arm64 tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.LINUX_ARM64_TARGET }}
+
+      - name: Download Linux x86 tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.LINUX_X86_TARGET }}
+
+      - name: Download Linux nightly tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.LINUX_NIGHTLY_TARGET }}
+
       - name: Download MacOS tarball
         uses: actions/download-artifact@v4
         with:
@@ -53,4 +70,7 @@ jobs:
           generate_release_notes: true
           files: |
             ./${{ env.RELEASE_BIN }}-${{ env.LINUX_AMD64_TARGET }}.tar.gz
+            ./${{ env.RELEASE_BIN }}-${{ env.LINUX_ARM64_TARGET }}.tar.gz
+            ./${{ env.RELEASE_BIN }}-${{ env.LINUX_X86_TARGET }}.tar.gz
+            ./${{ env.RELEASE_BIN }}-${{ env.LINUX_NIGHTLY_TARGET }}.tar.gz
             ./${{ env.RELEASE_BIN }}-${{ env.MACOS_TARGET }}.tar.gz
