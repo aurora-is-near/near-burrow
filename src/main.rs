@@ -1,89 +1,59 @@
-use clap::{Parser, Subcommand};
-use near_burrow::{commands, Result};
+use std::error::Error;
 
-#[derive(Parser)]
-#[command(name = "near-burrow")]
-#[command(version, about, long_about = None)]
-#[command(next_line_help = true)]
-struct Cli {
-    /// Turn debugging information on
-    #[arg(short, long, action = clap::ArgAction::Count)]
-    debug: u8,
-
-    #[command(subcommand)]
-    command: Option<Commands>,
-}
-
-#[derive(Subcommand)]
-enum Commands {
-    /// A command to print all asset markets
-    List {},
-    /// A command to compute a register transaction for an account in Burrow
-    Register {
-        /// The account_id of the token to be registered
-        token_id: String,
-        /// The account_id of the signer that will be registered
-        account_id: String,
-        /// Storage fee in yoctoNEAR
-        amount: String,
-    },
-    /// A command to compute a deposit transaction
-    Deposit {
-        /// The account_id of the token to be deposited
-        token_id: String,
-        /// Amount of tokens to deposit
-        amount: String,
-    },
-    /// A command to compute a withdraw transaction
-    Withdraw {
-        /// The account_id of the token to be withdrawn
-        token_id: String,
-        /// Amount of tokens to withdraw
-        amount: String,
-    },
-    /// A command to compute a claim transaction
-    Claim {},
-}
+use clap::Parser;
+use near_burrow::{
+    api,
+    cli::{Cli, Commands},
+    multisig::to_proposal,
+};
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
 
-    // You can see how many times a particular flag or argument occurred
-    // Note, only flags can have multiple occurrences
-    // match cli.debug {
-    //     0 => println!("Debug mode is off"),
-    //     1 => println!("Debug mode is kind of on"),
-    //     2 => println!("Debug mode is on"),
-    //     _ => println!("Don't be crazy"),
-    // }
 
-    // You can check for the existence of subcommands, and if found use their
-    // matches just as you would the top level cmd
+    let submission_time = "86400000000000".to_string();
+
     match &cli.command {
         Some(Commands::List {}) => {
-            commands::list().await?;
+            let resp = api::list().await?;
+            println!("{}", resp);
         }
+
         Some(Commands::Register {
             token_id,
             account_id,
             amount,
         }) => {
-            commands::register(token_id, account_id, amount).await?;
+            let args = api::register(token_id, account_id, amount).await?;
+            let description = "Register account in Burrow".to_string();
+            let proposal_args = to_proposal(description, submission_time, args);
+            println!("{}", proposal_args);
         }
+
         Some(Commands::Deposit { token_id, amount }) => {
-            commands::deposit(token_id, amount).await?;
+            let args = api::deposit(token_id, amount).await?;
+            let description = "Deposit to Burrow".to_string();
+            let proposal_args = to_proposal(description, submission_time, args);
+            println!("{}", proposal_args);
         }
+
         Some(Commands::Withdraw { token_id, amount }) => {
-            commands::withdraw(token_id, amount).await?;
+            let args = api::withdraw(token_id, amount).await?;
+            let description = "Withdraw from Burrow".to_string();
+            let proposal_args = to_proposal(description, submission_time, args);
+            println!("{}", proposal_args);
         }
+
         Some(Commands::Claim {}) => {
-            commands::claim().await?;
+            let args = api::claim().await?;
+            let description = "Claim from Burrow".to_string();
+            let proposal_args = to_proposal(description, submission_time, args);
+            println!("{}", proposal_args);
         }
         None => {}
-    }
+    };
 
-    // Continued program logic goes here...
     Ok(())
 }
 

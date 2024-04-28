@@ -1,12 +1,24 @@
+use std::fmt;
+
 use reqwest::Result;
 use serde::{Deserialize, Serialize};
-use serde_json::json;
 
-use crate::BurrowApiResponse;
-
-type AssetMarkets = Option<Vec<AssetMarketData>>;
+use crate::api::BurrowApiResponse;
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct AssetMarkets(Vec<AssetMarketData>);
+
+impl fmt::Display for AssetMarkets {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string_pretty(self).unwrap_or(String::default())
+        )
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct AssetMarketData {
     token_id: String,
     borrow_apr: String,
@@ -16,13 +28,13 @@ pub struct AssetMarketData {
     config: MarketConfigData,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 struct MarketCollateralData {
     balance: String,
     shares: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 struct MarketConfigData {
     can_borrow: bool,
     can_deposit: bool,
@@ -35,10 +47,6 @@ pub async fn list() -> Result<AssetMarkets> {
         .await?
         .json::<BurrowApiResponse<AssetMarkets>>()
         .await?;
-    // println!("{resp:#?}");
-
-    let data = json!(resp.data);
-    println!("{data:#}");
 
     Ok(resp.data)
 }
