@@ -1,3 +1,4 @@
+use log::{debug, trace};
 use reqwest::Result;
 use serde::{Deserialize, Serialize};
 
@@ -22,6 +23,7 @@ pub async fn register(
     account_id: &String,
     amount: &String,
 ) -> Result<BurrowRegisterArgs> {
+    trace!("start");
     let body = BurrowRegisterBody {
         token_id: token_id.into(),
         account_id: account_id.into(),
@@ -35,6 +37,8 @@ pub async fn register(
         .await?
         .json::<BurrowApiResponse<BurrowRegisterArgs>>()
         .await?;
+    debug!("response {resp:#?}");
 
+    trace!("finish");
     Ok(resp.data)
 }

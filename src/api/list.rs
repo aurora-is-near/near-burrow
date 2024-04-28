@@ -1,5 +1,6 @@
 use std::fmt;
 
+use log::{debug, trace};
 use reqwest::Result;
 use serde::{Deserialize, Serialize};
 
@@ -43,10 +44,13 @@ struct MarketConfigData {
 }
 
 pub async fn list() -> Result<AssetMarkets> {
+    trace!("start");
     let resp = reqwest::get("https://api.burrow.finance/get_assets_paged_detailed")
         .await?
         .json::<BurrowApiResponse<AssetMarkets>>()
         .await?;
+    debug!("response {resp:#?}");
 
+    trace!("finish");
     Ok(resp.data)
 }

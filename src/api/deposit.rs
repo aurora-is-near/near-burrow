@@ -1,3 +1,4 @@
+use log::{debug, trace};
 use reqwest::Result;
 use serde::{Deserialize, Serialize};
 
@@ -19,6 +20,7 @@ struct BurrowSupplyBody {
 }
 
 pub async fn deposit(token_id: &String, amount: &String) -> Result<BurrowSupplyArgs> {
+    trace!("start");
     let body = BurrowSupplyBody {
         token_id: token_id.into(),
         amount: amount.into(),
@@ -32,6 +34,8 @@ pub async fn deposit(token_id: &String, amount: &String) -> Result<BurrowSupplyA
         .await?
         .json::<BurrowApiResponse<BurrowSupplyArgs>>()
         .await?;
+    debug!("response {resp:#?}");
 
+    trace!("finish");
     Ok(resp.data)
 }

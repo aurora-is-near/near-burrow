@@ -1,6 +1,7 @@
 use std::error::Error;
 
 use clap::Parser;
+use env_logger::Builder;
 use near_burrow::{
     api,
     cli::{Cli, Commands},
@@ -11,6 +12,9 @@ use near_burrow::{
 async fn main() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
 
+    Builder::new()
+        .filter_level(cli.verbose.log_level_filter())
+        .init();
 
     let submission_time = "86400000000000".to_string();
 

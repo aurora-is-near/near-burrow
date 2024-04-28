@@ -5,6 +5,9 @@ use clap::{command, Parser, Subcommand};
 #[command(version, about, long_about = None)]
 #[command(next_line_help = true)]
 pub struct Cli {
+    #[command(flatten)]
+    pub verbose: clap_verbosity_flag::Verbosity,
+
     #[command(subcommand)]
     pub command: Option<Commands>,
 }

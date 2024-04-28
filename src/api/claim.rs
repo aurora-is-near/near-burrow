@@ -1,3 +1,4 @@
+use log::{debug, trace};
 use reqwest::Result;
 use serde::{Deserialize, Serialize};
 
@@ -11,12 +12,15 @@ pub struct BurrowClaimArgs {
 }
 
 pub async fn claim() -> Result<BurrowClaimArgs> {
+    trace!("start");
     let resp = reqwest::Client::new()
         .post("https://api.burrow.finance/account_farm_claim_all")
         .send()
         .await?
         .json::<BurrowApiResponse<BurrowClaimArgs>>()
         .await?;
+    debug!("{resp:#?}");
 
+    trace!("finish");
     Ok(resp.data)
 }

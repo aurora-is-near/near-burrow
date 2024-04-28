@@ -1,3 +1,4 @@
+use log::{debug, trace};
 use reqwest::Result;
 use serde::{Deserialize, Serialize};
 
@@ -18,6 +19,7 @@ struct BurrowWithdrawBody {
 }
 
 pub async fn withdraw(token_id: &String, amount: &String) -> Result<BurrowWithdrawArgs> {
+    trace!("start");
     let body = BurrowWithdrawBody {
         token_id: token_id.into(),
         amount: amount.into(),
@@ -30,6 +32,8 @@ pub async fn withdraw(token_id: &String, amount: &String) -> Result<BurrowWithdr
         .await?
         .json::<BurrowApiResponse<BurrowWithdrawArgs>>()
         .await?;
+    debug!("response {resp:#?}");
 
+    trace!("finish");
     Ok(resp.data)
 }
