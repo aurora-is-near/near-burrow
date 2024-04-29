@@ -14,7 +14,7 @@ impl fmt::Display for AssetMarkets {
         write!(
             f,
             "{}",
-            serde_json::to_string_pretty(self).unwrap_or(String::default())
+            serde_json::to_string_pretty(self).unwrap_or_default()
         )
     }
 }

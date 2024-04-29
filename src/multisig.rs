@@ -10,11 +10,7 @@ pub struct ProposalArgs {
 
 impl fmt::Display for ProposalArgs {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self).unwrap_or(String::default())
-        )
+        write!(f, "{}", serde_json::to_string(self).unwrap_or_default())
     }
 }
 
@@ -32,8 +28,8 @@ pub fn to_proposal<T: Serialize>(
 ) -> ProposalArgs {
     ProposalArgs {
         proposal: Proposal {
-            description: description.into(),
-            submission_time: submission_time.into(),
+            description,
+            submission_time,
             kind: json!({
                 "FunctionCall": data
             }),
