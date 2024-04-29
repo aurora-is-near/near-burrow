@@ -24,20 +24,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - build: linux
-            os: ubuntu-latest
-            rust: nightly
-            target: x86_64-unknown-linux-musl
-            strip: x86_64-linux-musl-strip
+          # Builds to be distributed
           - build: stable-x64
             os: ubuntu-latest
             rust: stable
             target: x86_64-unknown-linux-gnu
-            strip: x86_64-linux-gnu-strip
-          - build: stable-x86
-            os: ubuntu-latest
-            rust: stable
-            target: i686-unknown-linux-gnu
             strip: x86_64-linux-gnu-strip
           - build: stable-aarch64
             os: ubuntu-latest
@@ -48,6 +39,21 @@ jobs:
             os: macos-latest
             rust: stable
             target: x86_64-apple-darwin
+          - build: macos-arm
+            os: macos-latest
+            rust: stable
+            target: aarch64-apple-darwin
+          # Experimental builds
+          - build: linux
+            os: ubuntu-latest
+            rust: nightly
+            target: x86_64-unknown-linux-musl
+            strip: x86_64-linux-musl-strip
+          - build: stable-x86
+            os: ubuntu-latest
+            rust: stable
+            target: i686-unknown-linux-gnu
+            strip: x86_64-linux-gnu-strip
           # - target: x86_64-pc-windows-msvc
           #   os: windows-latest
           #   rust: stable
