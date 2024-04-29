@@ -1,16 +1,17 @@
+use log::{debug, trace};
+use reqwest::Result;
 use serde::{Deserialize, Serialize};
-use serde_json::json;
 
-use crate::{BurrowApiResponse, Proposal, ProposalData, Result};
+use crate::api::BurrowApiResponse;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct RegisterData {
+pub struct BurrowRegisterArgs {
     contract_id: String,
     method_name: String,
     args: Option<serde_json::Value>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Serialize)]
 struct BurrowRegisterBody {
     token_id: String,
     account_id: String,
@@ -21,7 +22,8 @@ pub async fn register(
     token_id: &String,
     account_id: &String,
     amount: &String,
-) -> Result<RegisterData> {
+) -> Result<BurrowRegisterArgs> {
+    trace!("start");
     let body = BurrowRegisterBody {
         token_id: token_id.into(),
         account_id: account_id.into(),
@@ -33,23 +35,10 @@ pub async fn register(
         .json(&body)
         .send()
         .await?
-        .json::<BurrowApiResponse<RegisterData>>()
+        .json::<BurrowApiResponse<BurrowRegisterArgs>>()
         .await?;
-    // println!("{resp:#?}");
+    debug!("response {resp:#?}");
 
-    let data = json!(resp.data);
-    // println!("{data:#}");
-
-    let proposal = Proposal {
-        proposal: ProposalData {
-            description: "Register account in Burrow".into(),
-            submission_time: "86400000000000".into(),
-            kind: json!({
-                "FunctionCall": data
-            }),
-        },
-    };
-    println!("{}", serde_json::to_string(&proposal)?);
-
+    trace!("finish");
     Ok(resp.data)
 }
