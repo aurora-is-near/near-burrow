@@ -21,6 +21,7 @@ openssl = { version = "0.10", features = ["vendored"] }
 log = "0.4.21"
 clap-verbosity-flag = "2.2.0"
 env_logger = "0.11.3"
+base64 = "0.22.1"
 
 [build-dependencies]
 clap = { version = "~4.5.4", features = ["derive"] }

@@ -21,10 +21,22 @@ pub struct Proposal {
     pub kind: serde_json::Value,
 }
 
-pub fn to_proposal<T: Serialize>(
+#[derive(Serialize, Deserialize)]
+pub struct FunctionCallData {
+    pub receiver_id: String,
+    pub actions: Vec<ActionCall>,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct ActionCall {
+    pub method_name: String,
+    pub args: Option<String>,
+}
+
+pub fn to_proposal(
     description: String,
     submission_time: String,
-    data: T,
+    data: FunctionCallData,
 ) -> ProposalArgs {
     ProposalArgs {
         proposal: Proposal {

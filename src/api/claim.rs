@@ -6,9 +6,9 @@ use crate::api::BurrowApiResponse;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BurrowClaimArgs {
-    contract_id: String,
-    method_name: String,
-    args: Option<serde_json::Value>,
+    pub contract_id: String,
+    pub method_name: String,
+    pub args: Option<serde_json::Value>,
 }
 
 pub async fn claim() -> Result<BurrowClaimArgs> {
