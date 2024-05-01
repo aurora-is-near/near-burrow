@@ -1,11 +1,12 @@
 use std::error::Error;
 
+use base64::prelude::*;
 use clap::Parser;
 use env_logger::Builder;
 use near_burrow::{
     api,
     cli::{Cli, Commands},
-    multisig::to_proposal,
+    multisig::{to_proposal, ActionCall, FunctionCallData},
 };
 
 #[tokio::main]
@@ -29,30 +30,64 @@ async fn main() -> Result<(), Box<dyn Error>> {
             account_id,
             amount,
         }) => {
-            let args = api::register(token_id, account_id, amount).await?;
+            let action = api::register(token_id, account_id, amount).await?;
             let description = "Register account in Burrow".to_string();
-            let proposal_args = to_proposal(description, submission_time, args);
+            let mut base64_args = String::new();
+            BASE64_STANDARD.encode_string(action.args.to_string(), &mut base64_args);
+            let function_call_data = FunctionCallData {
+                receiver_id: action.contract_id.to_string(),
+                actions: vec![ActionCall {
+                    method_name: action.method_name,
+                    args: Some(base64_args),
+                }],
+            };
+            let proposal_args = to_proposal(description, submission_time, function_call_data);
             println!("{}", proposal_args);
         }
 
         Some(Commands::Deposit { token_id, amount }) => {
-            let args = api::deposit(token_id, amount).await?;
+            let action = api::deposit(token_id, amount).await?;
             let description = "Deposit to Burrow".to_string();
-            let proposal_args = to_proposal(description, submission_time, args);
+            let mut base64_args = String::new();
+            BASE64_STANDARD.encode_string(action.args.to_string(), &mut base64_args);
+            let function_call_data = FunctionCallData {
+                receiver_id: action.contract_id.to_string(),
+                actions: vec![ActionCall {
+                    method_name: action.method_name,
+                    args: Some(base64_args),
+                }],
+            };
+            let proposal_args = to_proposal(description, submission_time, function_call_data);
             println!("{}", proposal_args);
         }
 
         Some(Commands::Withdraw { token_id, amount }) => {
-            let args = api::withdraw(token_id, amount).await?;
+            let action = api::withdraw(token_id, amount).await?;
             let description = "Withdraw from Burrow".to_string();
-            let proposal_args = to_proposal(description, submission_time, args);
+            let mut base64_args = String::new();
+            BASE64_STANDARD.encode_string(action.args.to_string(), &mut base64_args);
+            let function_call_data = FunctionCallData {
+                receiver_id: action.contract_id.to_string(),
+                actions: vec![ActionCall {
+                    method_name: action.method_name,
+                    args: Some(base64_args),
+                }],
+            };
+            let proposal_args = to_proposal(description, submission_time, function_call_data);
             println!("{}", proposal_args);
         }
 
         Some(Commands::Claim {}) => {
-            let args = api::claim().await?;
+            let action = api::claim().await?;
             let description = "Claim from Burrow".to_string();
-            let proposal_args = to_proposal(description, submission_time, args);
+            let function_call_data = FunctionCallData {
+                receiver_id: action.contract_id.to_string(),
+                actions: vec![ActionCall {
+                    method_name: action.method_name,
+                    args: None,
+                }],
+            };
+            let proposal_args = to_proposal(description, submission_time, function_call_data);
             println!("{}", proposal_args);
         }
         None => {}

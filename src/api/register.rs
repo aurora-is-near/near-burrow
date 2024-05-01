@@ -6,9 +6,9 @@ use crate::api::BurrowApiResponse;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BurrowRegisterArgs {
-    contract_id: String,
-    method_name: String,
-    args: Option<serde_json::Value>,
+    pub contract_id: String,
+    pub method_name: String,
+    pub args: serde_json::Value,
 }
 
 #[derive(Serialize)]

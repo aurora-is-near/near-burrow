@@ -6,10 +6,10 @@ use crate::api::BurrowApiResponse;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BurrowWithdrawArgs {
-    amount: f32,
-    contract_id: String,
-    method_name: String,
-    args: serde_json::Value,
+    pub amount: f32,
+    pub contract_id: String,
+    pub method_name: String,
+    pub args: serde_json::Value,
 }
 
 #[derive(Serialize)]
